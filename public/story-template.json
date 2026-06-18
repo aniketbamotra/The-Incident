@@ -1,0 +1,84 @@
+{
+  "game": { "name": "The Villa Incident" },
+  "characters": [
+    {
+      "name": "Vera",
+      "role": "The Fixer",
+      "public_persona": "Runs the house and knows everyone's debts. Calm, always watching.",
+      "secret": "She owes the host a great deal of money and the deadline was tonight.",
+      "objective": "Leave before midnight without anyone learning about the debt.",
+      "find": "Cass",
+      "find_question": "Were you near the study when the lights went out?",
+      "hide_description": "That she was alone in the study at 9pm.",
+      "memories": [
+        "I remember the glass breaking just after nine.",
+        "Someone called my name from the hallway and I froze.",
+        "The lights flickered twice before they went out."
+      ]
+    },
+    {
+      "name": "Cass",
+      "role": "The Witness",
+      "public_persona": "Quiet, observant, hard to read. Claims to have seen everything.",
+      "secret": "Cass was paid to keep an eye on Vera and report back.",
+      "objective": "Find out what Vera is hiding without revealing who's paying you.",
+      "find": "Mara",
+      "find_question": "Did you hear anything in the study around nine?",
+      "hide_description": "That they were watching Vera all evening.",
+      "memories": [
+        "I heard footsteps moving fast toward the study.",
+        "There was a smell of spilled wine near the door.",
+        "Vera's hands were shaking when she came out."
+      ]
+    },
+    {
+      "name": "Mara",
+      "role": "The Host's Sister",
+      "public_persona": "Warm, social, the glue of the party — or so it seems.",
+      "secret": "She moved a ledger from the study before anyone arrived.",
+      "objective": "Make sure the ledger is never mentioned tonight.",
+      "find": "Vera",
+      "find_question": "Have you seen the green ledger from the study?",
+      "hide_description": "That she handled the ledger.",
+      "memories": [
+        "I tucked something into my coat before the guests came.",
+        "The study door was already open when I passed it.",
+        "I told myself no one would notice."
+      ]
+    }
+  ],
+  "clues": [
+    {
+      "phase": 1,
+      "public_announcement": "A glass was found broken near the study around nine.",
+      "master_content": "Vera knocked the glass over while hiding the ledger she thought was still there.",
+      "implicating": {
+        "character": "Vera",
+        "private_content": "You felt the glass slip from your own hand in the dark.",
+        "implicates_self": true
+      },
+      "neutral": {
+        "character": "Cass",
+        "private_content": "You heard glass break from the hallway, but didn't see who."
+      }
+    },
+    {
+      "phase": 2,
+      "public_announcement": "The green ledger is missing from the study.",
+      "master_content": "Mara removed the ledger before the party to protect her brother.",
+      "implicating": {
+        "character": "Mara",
+        "private_content": "The ledger is in your coat pocket right now.",
+        "implicates_self": true
+      },
+      "neutral": {
+        "character": "Vera",
+        "private_content": "You went looking for the ledger and it was already gone."
+      }
+    }
+  ],
+  "phases": [
+    { "phase": 1, "notes": "Arrival — let people mingle, then drop the broken-glass clue." },
+    { "phase": 2, "notes": "The ledger surfaces. Open the first vote after the regather." }
+  ]
+}

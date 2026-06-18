@@ -4,11 +4,13 @@ import { useState } from "react";
 import type { Game, Player, Clue, ClueAssignment } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { CharacterBuilder } from "./CharacterBuilder";
 import { ClueDesigner } from "./ClueDesigner";
 import { PhaseNotes } from "./PhaseNotes";
 import { PreviewTab } from "./PreviewTab";
 import { LaunchPanel } from "./LaunchPanel";
+import { ImportStory } from "./ImportStory";
 
 export type ClueWithAssignments = Clue & {
   clue_assignments: ClueAssignment[];
@@ -33,6 +35,7 @@ export function SetupClient({
   clues: ClueWithAssignments[];
 }) {
   const [tab, setTab] = useState<Tab>("characters");
+  const [importOpen, setImportOpen] = useState(false);
   // Local copy so the interaction web updates instantly as the host edits.
   const [players, setPlayers] = useState<Player[]>(initialPlayers);
 
@@ -57,6 +60,9 @@ export function SetupClient({
           </h1>
         </div>
         <div className="flex items-center gap-3">
+          <Button size="sm" variant="ghost" onClick={() => setImportOpen(true)}>
+            Import
+          </Button>
           <Badge tone="neutral">
             <span className="tabular-nums">{game.code}</span>
           </Badge>
@@ -65,6 +71,13 @@ export function SetupClient({
           </Badge>
         </div>
       </header>
+
+      <ImportStory
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        gameId={game.id}
+        hasExisting={configured > 0 || clues.length > 0}
+      />
 
       {/* Tab bar */}
       <nav className="flex gap-1 border-b-[0.5px] border-line px-3">
