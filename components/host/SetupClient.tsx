@@ -66,8 +66,8 @@ export function SetupClient({
           <Badge tone="neutral">
             <span className="tabular-nums">{game.code}</span>
           </Badge>
-          <Badge tone={configured === 16 ? "green" : "amber"}>
-            {configured}/16 set
+          <Badge tone={configured === players.length ? "green" : "amber"}>
+            {configured}/{players.length} set
           </Badge>
         </div>
       </header>

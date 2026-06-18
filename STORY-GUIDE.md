@@ -8,8 +8,10 @@ onto a screen or a mechanic.
 
 ## The shape of a game
 
-16 players, one evening, one physical room they keep gathering in and dispersing
-from. You (the host) author everything *before* the night: 16 characters, the
+A group of players, one evening, one physical room they keep gathering in and
+dispersing from. **16 is the classic size, but you set the player count when you
+create the game (8–24)** — everything below scales to whatever you choose. You
+(the host) author everything *before* the night: one character per seat, the
 clues that drop during play, and the phase pacing. During the night you drive a
 dashboard — releasing clues, opening votes, calling everyone back together — and
 it ends with a projected finale that exposes every lie.
@@ -54,7 +56,7 @@ working example from the **"Download the template"** link in the import dialog
       "hide_description": "...",        // host-only note
       "memories": ["...", "...", "..."] // up to 3 (extras ignored)
     }
-    // 1–16 characters
+    // up to your game's seat count (default 16; 8–24)
   ],
   "clues": [
     {
@@ -261,8 +263,8 @@ board.
 
 Write these, in this order:
 
-- [ ] **16 character sheets** — name, role, public persona, secret, objective,
-      3 memory fragments.
+- [ ] **One character sheet per seat** (your chosen player count, default 16) —
+      name, role, public persona, secret, objective, 3 memory fragments.
 - [ ] **The find-graph** — assign each character's target + question so the
       setup web shows *no amber (unsought) nodes*. Cycles are good.
 - [ ] **Clue set** — for each clue: the two players, which is implicating

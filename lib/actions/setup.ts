@@ -4,13 +4,19 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { TablesUpdate } from "@/lib/supabase/types";
 
-const SLOT_COUNT = 16;
-
-// Ensures the game has exactly SLOT_COUNT player slots. Slots start unclaimed
-// (user_id = null) and are filled in by the host during setup; a player claims
-// one on join via the QR link.
+// Ensures the game has exactly its configured seat_count player slots. Slots
+// start unclaimed (user_id = null) and are filled in by the host during setup;
+// a player claims one on join via the QR link.
 export async function ensureSlots(gameId: string) {
   const supabase = await createClient();
+
+  const { data: game } = await supabase
+    .from("games")
+    .select("seat_count")
+    .eq("id", gameId)
+    .single();
+  const target = game?.seat_count ?? 16;
+
   const { data: existing, error } = await supabase
     .from("players")
     .select("id")
@@ -18,7 +24,7 @@ export async function ensureSlots(gameId: string) {
   if (error) throw error;
 
   const have = existing?.length ?? 0;
-  const missing = SLOT_COUNT - have;
+  const missing = target - have;
   if (missing > 0) {
     // Stagger joined_at so seat order is stable — "next open seat" on join is
     // then deterministic (seat 1 first), not dependent on insert tie-breaks.

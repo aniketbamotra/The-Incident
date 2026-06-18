@@ -42,14 +42,13 @@ export interface ImportResult {
   phaseNotes?: Record<number, string>;
 }
 
-const SLOT_COUNT = 16;
 const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const isObj = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null && !Array.isArray(v);
 
 // Validates the payload fully and, if valid, returns a normalized view.
 // Never throws on bad input — collects human-readable errors instead.
-function validate(payload: unknown): {
+function validate(payload: unknown, maxSeats: number): {
   errors: string[];
   characters: { name: string; raw: StoryCharacter }[];
   clues: StoryClue[];
@@ -70,9 +69,9 @@ function validate(payload: unknown): {
   if (!Array.isArray(file.characters) || file.characters.length === 0) {
     errors.push("`characters` must be a non-empty array.");
   } else {
-    if (file.characters.length > SLOT_COUNT) {
+    if (file.characters.length > maxSeats) {
       errors.push(
-        `Too many characters (${file.characters.length}); the maximum is ${SLOT_COUNT}.`
+        `Too many characters (${file.characters.length}); this game has ${maxSeats} seats.`
       );
     }
     file.characters.forEach((c, i) => {
@@ -139,10 +138,18 @@ export async function importStory(
   gameId: string,
   payload: unknown
 ): Promise<ImportResult> {
-  const { errors, characters, clues } = validate(payload);
+  const supabase = await createClient();
+
+  const { data: game } = await supabase
+    .from("games")
+    .select("seat_count")
+    .eq("id", gameId)
+    .single();
+  const maxSeats = game?.seat_count ?? 16;
+
+  const { errors, characters, clues } = validate(payload, maxSeats);
   if (errors.length) return { ok: false, errors };
 
-  const supabase = await createClient();
   await ensureSlots(gameId);
 
   const { data: seats, error: seatErr } = await supabase

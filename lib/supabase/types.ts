@@ -86,6 +86,7 @@ export type Database = {
           host_id: string | null
           id: string
           name: string
+          seat_count: number
           status: string | null
           vote_open: boolean | null
         }
@@ -96,6 +97,7 @@ export type Database = {
           host_id?: string | null
           id?: string
           name: string
+          seat_count?: number
           status?: string | null
           vote_open?: boolean | null
         }
@@ -106,6 +108,7 @@ export type Database = {
           host_id?: string | null
           id?: string
           name?: string
+          seat_count?: number
           status?: string | null
           vote_open?: boolean | null
         }

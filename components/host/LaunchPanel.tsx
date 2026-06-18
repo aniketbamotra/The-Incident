@@ -20,7 +20,7 @@ export function LaunchPanel({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [showQR, setShowQR] = useState(false);
-  const ready = configured === 16;
+  const ready = configured === players.length;
   const launched = game.status !== "lobby";
 
   function launch() {
@@ -37,7 +37,7 @@ export function LaunchPanel({
         <p className="text-sm text-ink-muted">
           {ready
             ? "All seats configured."
-            : `${16 - configured} seat${16 - configured === 1 ? "" : "s"} still empty.`}
+            : `${players.length - configured} seat${players.length - configured === 1 ? "" : "s"} still empty.`}
         </p>
         <div className="flex gap-3">
           {launched && (

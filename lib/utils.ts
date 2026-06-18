@@ -1,3 +1,8 @@
+// Per-game seat count bounds. Set at creation; 16 is the default villa size.
+export const MIN_SEATS = 8;
+export const MAX_SEATS = 24;
+export const DEFAULT_SEATS = 16;
+
 // Tiny classnames joiner — avoids pulling in a dependency.
 export function cn(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(" ");

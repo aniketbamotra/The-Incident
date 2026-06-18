@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/Button";
 import { createGame, joinByCode } from "@/lib/actions/games";
+import { MIN_SEATS, MAX_SEATS, DEFAULT_SEATS } from "@/lib/utils";
 
 function SubmitButton({
   children,
@@ -39,6 +40,20 @@ export function LandingActions() {
           placeholder="Name your game"
           className="h-12 rounded-[12px] border-[0.5px] border-line bg-surface px-4 text-ink placeholder:text-ink-muted focus:border-white/20 focus:outline-none"
         />
+        <label className="flex items-center justify-between rounded-[12px] border-[0.5px] border-line bg-surface px-4 py-2.5">
+          <span className="text-sm text-ink-secondary">Players</span>
+          <input
+            name="seat_count"
+            type="number"
+            min={MIN_SEATS}
+            max={MAX_SEATS}
+            defaultValue={DEFAULT_SEATS}
+            className="w-16 bg-transparent text-right text-ink tabular-nums focus:outline-none"
+          />
+        </label>
+        <p className="-mt-1 text-center text-[11px] text-ink-muted">
+          {MIN_SEATS}–{MAX_SEATS} players · 16 is the classic size
+        </p>
         <SubmitButton>Create</SubmitButton>
         <button
           type="button"
