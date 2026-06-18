@@ -108,10 +108,10 @@ export function EpiloguePhase({
           disabled={idx === 0}
           onClick={() => setIdx((i) => Math.max(0, i - 1))}
         >
-          ← Previous
+          ← Prev player
         </Button>
         <span className="text-sm text-ink-muted">
-          {idx + 1} / {scores.length}
+          Player {idx + 1} / {scores.length}
         </span>
         <Button
           variant="ghost"
@@ -119,7 +119,7 @@ export function EpiloguePhase({
           disabled={idx === scores.length - 1}
           onClick={() => setIdx((i) => Math.min(scores.length - 1, i + 1))}
         >
-          Next →
+          Next player →
         </Button>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { computeScores, type ClueAssignmentLite } from "@/lib/scoring";
 
 export async function advancePhase(gameId: string, current: number) {
   const supabase = await createClient();
@@ -74,11 +75,49 @@ export async function sendAnnouncement(gameId: string, content: string) {
 
 export async function skipToFinale(gameId: string) {
   const supabase = await createClient();
+
+  // Persist final scores at the finale trigger (the finale screen also computes
+  // them live; this writes them to players.trust_score for the record).
+  await persistScores(supabase, gameId);
+
   await supabase
     .from("games")
     .update({ status: "finale", vote_open: false })
     .eq("id", gameId);
   revalidatePath(`/host/${gameId}`);
+}
+
+async function persistScores(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  gameId: string
+) {
+  const [{ data: players }, { data: clues }, { data: votes }, { data: trust }, { data: interactions }] =
+    await Promise.all([
+      supabase.from("players").select("*").eq("game_id", gameId),
+      supabase.from("clues").select("clue_assignments(player_id, decision, implicates_self)").eq("game_id", gameId),
+      supabase.from("votes").select("*").eq("game_id", gameId),
+      supabase.from("trust_ratings").select("*").eq("game_id", gameId),
+      supabase.from("interactions").select("*").eq("game_id", gameId),
+    ]);
+
+  if (!players) return;
+
+  const assignments = (clues ?? []).flatMap(
+    (c) => ((c.clue_assignments ?? []) as unknown) as ClueAssignmentLite[]
+  );
+  const scores = computeScores({
+    players,
+    assignments,
+    votes: votes ?? [],
+    trust: trust ?? [],
+    interactions: interactions ?? [],
+  });
+
+  await Promise.all(
+    scores.map((s) =>
+      supabase.from("players").update({ trust_score: s.score }).eq("id", s.player.id)
+    )
+  );
 }
 
 // Full re-arm — wipes every trace of a demo/explanation run so the real game
