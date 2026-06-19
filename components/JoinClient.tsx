@@ -54,7 +54,8 @@ export function JoinClient({
           {pid && <input type="hidden" name="pid" value={pid} />}
           <input
             name="name"
-            autoFocus
+            autoFocus={!seatHint}
+            defaultValue={seatHint ?? ""}
             placeholder="Your name"
             className="h-12 rounded-[12px] border-[0.5px] border-line bg-surface px-4 text-ink placeholder:text-ink-muted focus:border-white/20 focus:outline-none"
           />

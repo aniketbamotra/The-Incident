@@ -125,7 +125,7 @@ export function PlayClient({
         )}
       </AnimatePresence>
 
-      <main className="mx-auto w-full max-w-md flex-1 px-5 py-5">
+      <main className="mx-auto w-full max-w-md flex-1 px-5 py-5 pb-24">
         <AnimatePresence mode="wait">
           <motion.div
             key={tab}
@@ -151,9 +151,7 @@ export function PlayClient({
         </AnimatePresence>
       </main>
 
-      <div className="mx-auto w-full max-w-md">
-        <TabBar active={tab} onChange={setTab} intelBadge={pendingClueCount} />
-      </div>
+      <TabBar active={tab} onChange={setTab} intelBadge={pendingClueCount} />
 
       <VoteModal
         open={!!game.vote_open}

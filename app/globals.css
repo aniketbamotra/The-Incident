@@ -91,6 +91,13 @@ body {
   animation: glow-purple 1.8s ease-out forwards;
 }
 
+/* Prevent iOS auto-zoom on input focus (triggers when font-size < 16px) */
+input:not([type="range"]),
+textarea,
+select {
+  font-size: 16px;
+}
+
 /* Range input — minimal flat slider */
 input[type="range"] {
   -webkit-appearance: none;
