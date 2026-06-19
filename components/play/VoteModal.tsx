@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { motion } from "framer-motion";
 import type { Player, Vote } from "@/lib/supabase/types";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -49,11 +50,14 @@ export function VoteModal({
         </p>
 
         <div className="space-y-2">
-          {others.map((p) => {
+          {others.map((p, index) => {
             const on = suspect === p.id;
             return (
-              <button
+              <motion.button
                 key={p.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.05, duration: 0.25, ease: "easeOut" }}
                 onClick={() => {
                   setSuspect(p.id);
                   setRecorded(false);
@@ -69,13 +73,15 @@ export function VoteModal({
                 <span className="flex-1 text-sm text-ink">
                   {p.character_name || p.name}
                 </span>
-                <span
+                <motion.span
+                  animate={on ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+                  transition={{ duration: 0.25 }}
                   className={cn(
                     "h-4 w-4 rounded-full border-[1.5px]",
                     on ? "border-red bg-red" : "border-line"
                   )}
                 />
-              </button>
+              </motion.button>
             );
           })}
         </div>

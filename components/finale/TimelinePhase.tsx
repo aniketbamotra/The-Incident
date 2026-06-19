@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { Player } from "@/lib/supabase/types";
 import type { ClueWithAssignments } from "@/components/host/SetupClient";
 import type { FinaleEvent } from "@/app/finale/[gameId]/page";
@@ -27,25 +28,32 @@ export function TimelinePhase({
           What actually happened
         </h2>
         <div className="space-y-3">
-          {clues.map((c) => {
+          {clues.map((c, i) => {
             const hiders = c.clue_assignments.filter(
               (a) => a.decision === "hidden"
             );
             return (
-              <Card key={c.id} tint="purple" inset>
-                <div className="mb-2 flex items-center justify-between">
-                  <Badge tone="purple">Phase {c.phase}</Badge>
-                  {hiders.length > 0 && (
-                    <span className="text-[11px] text-red">
-                      {hiders.map((h) => nameOf(h.player_id)).join(", ")} hid this
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-ink">{c.master_content}</p>
-                <p className="mt-1 text-xs text-ink-muted">
-                  Group was told: {c.public_announcement}
-                </p>
-              </Card>
+              <motion.div
+                key={c.id}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.08, duration: 0.35, ease: "easeOut" }}
+              >
+                <Card tint="purple" inset>
+                  <div className="mb-2 flex items-center justify-between">
+                    <Badge tone="purple">Phase {c.phase}</Badge>
+                    {hiders.length > 0 && (
+                      <span className="text-[11px] text-red">
+                        {hiders.map((h) => nameOf(h.player_id)).join(", ")} hid this
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-ink">{c.master_content}</p>
+                  <p className="mt-1 text-xs text-ink-muted">
+                    Group was told: {c.public_announcement}
+                  </p>
+                </Card>
+              </motion.div>
             );
           })}
           {clues.length === 0 && (
@@ -59,8 +67,14 @@ export function TimelinePhase({
           Reconstructed from the room
         </h2>
         <div className="relative space-y-3 border-l-[0.5px] border-line pl-5">
-          {events.map((e) => (
-            <div key={e.id} className="relative">
+          {events.map((e, i) => (
+            <motion.div
+              key={e.id}
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.08, duration: 0.35, ease: "easeOut" }}
+              className="relative"
+            >
               <span className="absolute -left-[22px] top-1.5 h-2 w-2 rounded-full bg-white/40" />
               <CardLabel>{e.event_time || "some time"}</CardLabel>
               <p className="text-sm text-ink">{e.title}</p>
@@ -72,7 +86,7 @@ export function TimelinePhase({
                   ? `Involved: ${e.story_event_players.map((sp) => nameOf(sp.player_id)).join(", ")}`
                   : `Logged by ${nameOf(e.created_by)}`}
               </p>
-            </div>
+            </motion.div>
           ))}
           {events.length === 0 && (
             <p className="text-sm text-ink-muted">

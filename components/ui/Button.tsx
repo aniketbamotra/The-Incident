@@ -1,7 +1,7 @@
 "use client";
 
+import { motion, type HTMLMotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
-import type { ButtonHTMLAttributes } from "react";
 
 type Variant = "primary" | "ghost" | "green" | "red" | "redOutline" | "purple";
 type Size = "sm" | "md" | "lg";
@@ -24,7 +24,7 @@ const SIZES: Record<Size, string> = {
   lg: "h-12 px-6 text-base rounded-[12px]",
 };
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends HTMLMotionProps<"button"> {
   variant?: Variant;
   size?: Size;
   fullWidth?: boolean;
@@ -35,10 +35,14 @@ export function Button({
   size = "md",
   fullWidth,
   className,
+  disabled,
   ...props
 }: Props) {
   return (
-    <button
+    <motion.button
+      whileTap={disabled ? undefined : { scale: 0.96 }}
+      transition={{ duration: 0.08 }}
+      disabled={disabled}
       className={cn(
         "inline-flex items-center justify-center gap-2 font-medium transition-colors",
         "disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none",

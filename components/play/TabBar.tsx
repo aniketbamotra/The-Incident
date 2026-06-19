@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export type PlayTab = "you" | "events" | "trust" | "intel" | "tips";
 
@@ -37,7 +38,11 @@ export function TabBar({
             <span className="absolute right-[28%] top-2 h-1.5 w-1.5 rounded-full bg-amber" />
           ) : null}
           {active === t.id && (
-            <span className="absolute inset-x-6 top-0 h-px bg-ink" />
+            <motion.span
+              layoutId="tab-indicator"
+              className="absolute inset-x-6 top-0 h-px bg-ink"
+              transition={{ duration: 0.22, ease: "easeOut" }}
+            />
           )}
         </button>
       ))}

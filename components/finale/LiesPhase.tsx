@@ -1,9 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { Player } from "@/lib/supabase/types";
 import type { ClueWithAssignments } from "@/components/host/SetupClient";
 import { Card, CardLabel } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+
+function useCounter(target: number, duration = 1200) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (target === 0) return;
+    let start: number | null = null;
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setValue(Math.round(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    const id = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(id);
+  }, [target, duration]);
+  return value;
+}
 
 export function LiesPhase({
   clues,
@@ -93,9 +111,10 @@ function Stat({
   label: string;
   tone: "red" | "green" | "amber";
 }) {
+  const animated = useCounter(value);
   return (
     <Card tint={tone} inset>
-      <p className="text-3xl font-semibold tabular-nums text-ink">{value}</p>
+      <p className="text-3xl font-semibold tabular-nums text-ink">{animated}</p>
       <CardLabel>{label}</CardLabel>
     </Card>
   );

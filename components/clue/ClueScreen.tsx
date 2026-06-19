@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import type { Clue, ClueAssignment } from "@/lib/supabase/types";
 import { timeAgo } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -49,6 +50,12 @@ export function ClueScreen({
     );
   }
 
+  const sections = [
+    { key: "public" },
+    { key: "private" },
+    { key: "situation" },
+  ];
+
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col px-5 py-6">
       <button
@@ -60,7 +67,12 @@ export function ClueScreen({
 
       <div className="flex-1 space-y-5">
         {/* 1. Public context */}
-        <div className="rounded-[12px] border-[0.5px] border-amber/30 bg-amber/[0.08] p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0, duration: 0.35, ease: "easeOut" }}
+          className="rounded-[12px] border-[0.5px] border-amber/30 bg-amber/[0.08] p-4"
+        >
           <p className="text-[11px] uppercase tracking-[0.12em] text-amber/80">
             The group has been told
           </p>
@@ -70,32 +82,48 @@ export function ClueScreen({
               {partnerName} also received a version of this clue.
             </p>
           )}
-        </div>
+        </motion.div>
 
         {/* 2. Private clue */}
-        <Card>
-          <CardLabel>Your private clue</CardLabel>
-          <p className="text-base leading-7 text-ink">
-            {assignment.private_content}
-          </p>
-          <p className="mt-3 text-[11px] tabular-nums text-ink-muted">
-            Found {timeAgo(clue.released_at)}
-          </p>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12, duration: 0.35, ease: "easeOut" }}
+        >
+          <Card>
+            <CardLabel>Your private clue</CardLabel>
+            <p className="text-base leading-7 text-ink">
+              {assignment.private_content}
+            </p>
+            <p className="mt-3 text-[11px] tabular-nums text-ink-muted">
+              Found {timeAgo(clue.released_at)}
+            </p>
+          </Card>
+        </motion.div>
 
         {/* 3. Your situation */}
-        <div className="rounded-[12px] border-[0.5px] border-line bg-surface/60 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.24, duration: 0.35, ease: "easeOut" }}
+          className="rounded-[12px] border-[0.5px] border-line bg-surface/60 p-4"
+        >
           <CardLabel>Your situation</CardLabel>
           <p className="text-sm leading-6 text-ink-secondary">
             {assignment.implicates_self
               ? "This version points back at you. If it surfaces, people will have questions — and how you handle it now is its own kind of answer."
               : "This doesn't implicate you directly, but what you do with it says something. Sharing it moves suspicion; sitting on it is a choice others may later read into."}
           </p>
-        </div>
+        </motion.div>
       </div>
 
-      {/* 4. Decision */}
-      <div className="sticky bottom-0 mt-6 space-y-3 bg-bg/90 py-4 backdrop-blur">
+      {/* 4. Decision — slides up from below */}
+      <motion.div
+        initial={{ y: 60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.35, ease: "easeOut" }}
+        className="sticky bottom-0 mt-6 space-y-3 bg-bg/90 py-4 backdrop-blur"
+      >
         <Button
           variant="green"
           size="lg"
@@ -114,7 +142,7 @@ export function ClueScreen({
         >
           Sit on it
         </Button>
-      </div>
+      </motion.div>
 
       <RevealModal
         open={modal === "reveal"}

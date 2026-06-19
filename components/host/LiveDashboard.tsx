@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import type {
   Game,
@@ -272,9 +273,12 @@ export function LiveDashboard({
               {feed.length === 0 && (
                 <p className="text-sm text-ink-muted">Quiet so far.</p>
               )}
-              {feed.map((item) => (
-                <div
+              {feed.map((item, i) => (
+                <motion.div
                   key={item.id}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ delay: i * 0.03, duration: 0.25, ease: "easeOut" }}
                   className="flex items-center gap-2.5 rounded-[8px] px-2 py-1.5 text-[13px]"
                 >
                   <span
@@ -291,7 +295,7 @@ export function LiveDashboard({
                   <span className="shrink-0 text-[11px] tabular-nums text-ink-muted">
                     {timeAgo(item.at)}
                   </span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </Card>

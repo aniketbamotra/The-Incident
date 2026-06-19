@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import type { Player, TrustRating } from "@/lib/supabase/types";
 import type { PlayerScore } from "@/lib/scoring";
 import { cn } from "@/lib/utils";
@@ -46,60 +47,71 @@ export function EpiloguePhase({
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Avatar name={current.player.character_name || current.player.name} size="lg" />
-          <div>
-            <h2 className="text-xl font-semibold text-ink">
-              {current.player.character_name || current.player.name}
-            </h2>
-            {current.player.role && (
-              <p className="text-sm text-ink-secondary">{current.player.role}</p>
-            )}
-          </div>
-        </div>
-        <Badge tone={current.objectiveMet ? "green" : "neutral"}>
-          {current.score} pts
-        </Badge>
-      </div>
-
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Mini value={current.interactions} label="Conversations" />
-        <Mini value={current.reveals} label="Came clean" tone="green" />
-        <Mini value={current.lies} label="Withheld" tone="red" />
-        <Mini value={current.correctVotes} label="Right votes" />
-      </div>
-
-      <Card inset>
-        <CardLabel>Epilogue</CardLabel>
-        <p className="text-sm leading-7 text-ink">{epilogue}</p>
-      </Card>
-
-      <div className="grid gap-3 sm:grid-cols-2">
-        <Card inset>
-          <CardLabel>Their secret</CardLabel>
-          <p className="text-sm text-ink">
-            {current.player.secret || "—"}
-          </p>
-        </Card>
-        <Card inset>
-          <CardLabel>Trusted most</CardLabel>
-          {mostTrusted ? (
-            <p className="text-sm text-ink">
-              {nameOf(mostTrusted.rated_id)} —{" "}
-              <span
-                className={cn(
-                  (mostTrustedHonesty ?? 0) >= 50 ? "text-green" : "text-red"
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={idx}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="space-y-5"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Avatar name={current.player.character_name || current.player.name} size="lg" />
+              <div>
+                <h2 className="text-xl font-semibold text-ink">
+                  {current.player.character_name || current.player.name}
+                </h2>
+                {current.player.role && (
+                  <p className="text-sm text-ink-secondary">{current.player.role}</p>
                 )}
-              >
-                {mostTrustedHonesty}% honest
-              </span>
-            </p>
-          ) : (
-            <p className="text-sm text-ink-muted">Trusted no one.</p>
-          )}
-        </Card>
-      </div>
+              </div>
+            </div>
+            <Badge tone={current.objectiveMet ? "green" : "neutral"}>
+              {current.score} pts
+            </Badge>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <Mini value={current.interactions} label="Conversations" />
+            <Mini value={current.reveals} label="Came clean" tone="green" />
+            <Mini value={current.lies} label="Withheld" tone="red" />
+            <Mini value={current.correctVotes} label="Right votes" />
+          </div>
+
+          <Card inset>
+            <CardLabel>Epilogue</CardLabel>
+            <p className="text-sm leading-7 text-ink">{epilogue}</p>
+          </Card>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Card inset>
+              <CardLabel>Their secret</CardLabel>
+              <p className="text-sm text-ink">
+                {current.player.secret || "—"}
+              </p>
+            </Card>
+            <Card inset>
+              <CardLabel>Trusted most</CardLabel>
+              {mostTrusted ? (
+                <p className="text-sm text-ink">
+                  {nameOf(mostTrusted.rated_id)} —{" "}
+                  <span
+                    className={cn(
+                      (mostTrustedHonesty ?? 0) >= 50 ? "text-green" : "text-red"
+                    )}
+                  >
+                    {mostTrustedHonesty}% honest
+                  </span>
+                </p>
+              ) : (
+                <p className="text-sm text-ink-muted">Trusted no one.</p>
+              )}
+            </Card>
+          </div>
+        </motion.div>
+      </AnimatePresence>
 
       <div className="flex items-center justify-between pt-2">
         <Button

@@ -61,6 +61,36 @@ body {
   animation: pulse-soft 1.8s ease-in-out infinite;
 }
 
+@keyframes glow-red {
+  0% { box-shadow: 0 0 0px rgba(226, 75, 74, 0); }
+  40% { box-shadow: 0 0 28px rgba(226, 75, 74, 0.25); }
+  100% { box-shadow: 0 0 8px rgba(226, 75, 74, 0.08); }
+}
+
+@keyframes glow-green {
+  0% { box-shadow: 0 0 0px rgba(29, 158, 117, 0); }
+  40% { box-shadow: 0 0 28px rgba(29, 158, 117, 0.2); }
+  100% { box-shadow: 0 0 8px rgba(29, 158, 117, 0.06); }
+}
+
+@keyframes glow-purple {
+  0% { box-shadow: 0 0 0px rgba(127, 119, 221, 0); }
+  40% { box-shadow: 0 0 36px rgba(127, 119, 221, 0.35); }
+  100% { box-shadow: 0 0 12px rgba(127, 119, 221, 0.1); }
+}
+
+.animate-glow-red {
+  animation: glow-red 1.2s ease-out forwards;
+}
+
+.animate-glow-green {
+  animation: glow-green 1.2s ease-out forwards;
+}
+
+.animate-glow-purple {
+  animation: glow-purple 1.8s ease-out forwards;
+}
+
 /* Range input — minimal flat slider */
 input[type="range"] {
   -webkit-appearance: none;

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import type {
   Game,
@@ -118,24 +119,36 @@ export function PlayClient({
 
   return (
     <div className="flex min-h-screen flex-col">
-      {showGathering && (
-        <GatheringBanner onDismiss={() => setGatheringDismissed(game.status!)} />
-      )}
+      <AnimatePresence>
+        {showGathering && (
+          <GatheringBanner onDismiss={() => setGatheringDismissed(game.status!)} />
+        )}
+      </AnimatePresence>
 
       <main className="mx-auto w-full max-w-md flex-1 px-5 py-5">
-        {tab === "you" && <YouTab me={me} target={target} />}
-        {tab === "events" && (
-          <EventsTab gameId={game.id} me={me} players={players} events={events} />
-        )}
-        {tab === "trust" && (
-          <TrustTab gameId={game.id} me={me} players={players} trust={trust} />
-        )}
-        {tab === "intel" && (
-          <IntelTab gameId={game.id} revelations={revelations} myClues={myClues} />
-        )}
-        {tab === "tips" && (
-          <TipsTab gameId={game.id} me={me} players={players} tips={tips} />
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+          >
+            {tab === "you" && <YouTab me={me} target={target} />}
+            {tab === "events" && (
+              <EventsTab gameId={game.id} me={me} players={players} events={events} />
+            )}
+            {tab === "trust" && (
+              <TrustTab gameId={game.id} me={me} players={players} trust={trust} />
+            )}
+            {tab === "intel" && (
+              <IntelTab gameId={game.id} revelations={revelations} myClues={myClues} />
+            )}
+            {tab === "tips" && (
+              <TipsTab gameId={game.id} me={me} players={players} tips={tips} />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       <div className="mx-auto w-full max-w-md">

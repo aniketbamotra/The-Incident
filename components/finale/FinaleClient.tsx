@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import type {
   Game,
   Player,
@@ -67,16 +68,19 @@ export function FinaleClient({
         </div>
         <div className="flex items-center gap-2">
           {PHASES.map((p, i) => (
-            <div
+            <motion.div
               key={p}
-              className={cn(
-                "h-1.5 rounded-full transition-all",
-                i === phase
-                  ? "w-8 bg-purple"
-                  : i < phase
-                    ? "w-4 bg-purple/40"
-                    : "w-4 bg-white/10"
-              )}
+              animate={{
+                width: i === phase ? 32 : 16,
+                backgroundColor:
+                  i === phase
+                    ? "rgb(127,119,221)"
+                    : i < phase
+                      ? "rgba(127,119,221,0.4)"
+                      : "rgba(255,255,255,0.1)",
+              }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="h-1.5 rounded-full"
             />
           ))}
         </div>
@@ -88,17 +92,27 @@ export function FinaleClient({
             Phase {phase + 1} — {PHASES[phase]}
           </p>
 
-          {phase === 0 && (
-            <TimelinePhase clues={clues} events={events} players={players} />
-          )}
-          {phase === 1 && <LiesPhase clues={clues} players={players} />}
-          {phase === 2 && (
-            <TrustGraph players={players} trust={trust} assignments={assignments} />
-          )}
-          {phase === 3 && (
-            <EpiloguePhase scores={scores} players={players} trust={trust} />
-          )}
-          {phase === 4 && <Leaderboard scores={scores} />}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={phase}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              {phase === 0 && (
+                <TimelinePhase clues={clues} events={events} players={players} />
+              )}
+              {phase === 1 && <LiesPhase clues={clues} players={players} />}
+              {phase === 2 && (
+                <TrustGraph players={players} trust={trust} assignments={assignments} />
+              )}
+              {phase === 3 && (
+                <EpiloguePhase scores={scores} players={players} trust={trust} />
+              )}
+              {phase === 4 && <Leaderboard scores={scores} />}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </main>
 
